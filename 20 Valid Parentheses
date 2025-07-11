@@ -1,0 +1,44 @@
+/*
+LeetCode: 20
+Problem: Valid Parentheses
+Link: https://leetcode.com/problems/valid-parentheses/
+
+Approach:
+- Use a stack to track opening brackets.
+- For each character in the string:
+  - If it's an opening bracket ('(', '{', '['), push it onto the stack.
+  - If it's a closing bracket (')', '}', ']'):
+    - Check if the stack is not empty and the top of the stack forms a matching pair using the compare method.
+    - If yes, pop the top; otherwise, return false.
+
+- After processing all characters, if the stack is empty, return true (all brackets matched), else false.
+*/
+
+Solution
+--
+class Solution {
+    public boolean isValid(String s) {
+        Stack<Character> stack = new Stack<>();
+        
+        for (char ch : s.toCharArray()) {
+            if (ch == '(' || ch == '{' || ch == '[') {
+                stack.push(ch);
+            } else if (!stack.isEmpty() && compare(stack.peek(), ch)) {
+                stack.pop();
+            } else {
+                return false;
+            }
+        }
+        
+        return stack.isEmpty();
+    }
+
+    // Helper method to compare matching brackets
+    public boolean compare(char open, char close) {
+        if (open == '(' && close == ')') return true;
+        if (open == '[' && close == ']') return true;
+        if (open == '{' && close == '}') return true;
+        return false;
+    }
+}
+--
