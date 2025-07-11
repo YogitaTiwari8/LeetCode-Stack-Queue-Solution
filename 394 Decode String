@@ -1,0 +1,54 @@
+/*
+LeetCode: 394
+Problem: Decode String
+Link: https://leetcode.com/problems/decode-string/
+
+Approach:
+- Use two stacks:
+  1. count: to keep track of repeat counts for substrings.
+  2. stack: to store intermediate strings when encountering nested brackets.
+- Traverse each character in the input string:
+  - If it's a digit, build the number (supporting multi-digit counts).
+  - If it's an opening bracket '[', push the current number and current string to their respective stacks, and reset for the next substring.
+  - If it's a closing bracket ']', pop the last repeat count and previous string, then append the current string 'repeat' times.
+  - If it's a character, append it to the current StringBuilder.
+- At the end, the result string will be in the final StringBuilder.
+*/
+
+Solution
+--
+class Solution {
+    public String decodeString(String s) {
+        Stack<Integer> count = new Stack<>();
+        Stack<StringBuilder> stack = new Stack<>();
+        int num = 0;
+        StringBuilder sb = new StringBuilder();
+
+        for (char ch : s.toCharArray()) {
+            if (Character.isDigit(ch)) {
+                // Build number (could be multiple digits)
+                num = num * 10 + (ch - '0');
+            } else if (ch == '[') {
+                // Push current repeat count and string to stacks
+                count.push(num);
+                stack.push(sb);
+                num = 0;
+                sb = new StringBuilder();  // Reset current string
+            } else if (ch == ']') {
+                // Pop count and previous string, repeat and append
+                int repeat = count.pop();
+                StringBuilder str = stack.pop();
+                for (int i = 1; i <= repeat; i++) {
+                    str.append(sb);
+                }
+                sb = str;  // Update current string
+            } else {
+                // Append regular character
+                sb.append(ch);
+            }
+        }
+
+        return sb.toString();
+    }
+}
+--
