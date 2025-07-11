@@ -1,0 +1,52 @@
+/*
+LeetCode: 155
+Problem: Min Stack
+Link: https://leetcode.com/problems/min-stack/
+
+Approach:
+Use two stacks:
+1. main stack – stores all values
+2. min stack – keeps track of the current minimum at each level of the main stack
+
+At each push:
+- Push the value onto the main stack.
+- Push the minimum of the current value and the top of the min stack onto the min stack.
+
+At each pop:
+- Pop from both stacks to maintain synchronization.
+*/
+
+Solution
+--
+class MinStack {
+    Stack<Integer> main;
+    Stack<Integer> min;
+
+    public MinStack() {
+        main = new Stack<Integer>();
+        min = new Stack<Integer>();
+    }
+
+    public void push(int val) {
+        main.push(val);
+        if (min.isEmpty() || val <= min.peek()) {
+            min.push(val);
+        } else {
+            min.push(min.peek());
+        }
+    }
+
+    public void pop() {
+        main.pop();
+        min.pop();
+    }
+
+    public int top() {
+        return main.peek();
+    }
+
+    public int getMin() {
+        return min.peek();
+    }
+}
+--
