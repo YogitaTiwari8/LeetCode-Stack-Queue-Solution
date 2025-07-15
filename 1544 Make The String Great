@@ -1,0 +1,50 @@
+/*
+ * LeetCode: 1544
+ * Problem: Make The String Great
+ * Leetcode: https://leetcode.com/problems/make-the-string-great/
+ *
+ * Approach:
+ * - Remove adjacent characters where one is uppercase and the other is lowercase of the same letter.
+ * - Use either a stack or a StringBuilder to simulate the removal.
+ * - Key check: Two characters are considered a bad pair if their ASCII difference is 32.
+ */
+
+Solution
+--
+class Solution {
+
+    // Approach 1: Using StringBuilder
+    public String makeGood(String s) {
+        StringBuilder result = new StringBuilder();
+        for (char ch : s.toCharArray()) {
+            // Check if last character in result and current char form a bad pair
+            if (result.length() > 0 && Math.abs(result.charAt(result.length() - 1) - ch) == 32) {
+                result.deleteCharAt(result.length() - 1); // Remove the bad pair
+            } else {
+                result.append(ch); // Add valid char
+            }
+        }
+        return result.toString();
+    }
+
+    // Approach 2: Using Stack
+    public String makeGoodUsingStack(String s) {
+        Stack<Character> stack = new Stack<>();
+        for (char ch : s.toCharArray()) {
+            // Compare top of stack and current char
+            if (!stack.isEmpty() && Math.abs(stack.peek() - ch) == 32) {
+                stack.pop(); // Remove the bad pair
+            } else {
+                stack.push(ch); // Push valid char
+            }
+        }
+
+        // Build result string from stack
+        StringBuilder result = new StringBuilder();
+        for (char ch : stack) {
+            result.append(ch);
+        }
+        return result.toString();
+    }
+}
+--
