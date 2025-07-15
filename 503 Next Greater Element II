@@ -1,0 +1,42 @@
+/*
+ * LeetCode: 503
+ * Problem: Next Greater Element II
+ * Link: https://leetcode.com/problems/next-greater-element-ii/
+ *
+ * Approach:
+ * - Use a monotonic decreasing stack to keep track of indexes whose next greater elements are not yet found.
+ * - Traverse the array twice (simulate circular array) from right to left.
+ * - For each element:
+ *    - Pop from stack while current element is greater than or equal to top of stack.
+ *    - If stack is empty, next greater does not exist => set -1.
+ *    - Else, top of stack gives next greater element.
+ * - Push current index to stack.
+ */
+
+Solution
+--
+class Solution {
+    public int[] nextGreaterElements(int[] nums) {
+        Stack<Integer> stack = new Stack<>(); // Stores indices
+        int[] result = new int[nums.length];
+
+        // Traverse twice the array length to simulate circular behavior
+        for (int i = 2 * nums.length - 1; i >= 0; i--) {
+            // Maintain a decreasing stack
+            while (!stack.isEmpty() && nums[i % nums.length] >= nums[stack.peek()]) {
+                stack.pop();
+            }
+
+            // If in the first pass, fill result array
+            if (i < nums.length) {
+                result[i] = stack.isEmpty() ? -1 : nums[stack.peek()];
+            }
+
+            // Push current index to stack
+            stack.push(i % nums.length);
+        }
+
+        return result;
+    }
+}
+--
