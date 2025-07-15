@@ -1,0 +1,49 @@
+/*
+ * LeetCode: 71
+ * Problem: Simplify Path
+ * Link: https://leetcode.com/problems/simplify-path/
+ *
+ * Approach:
+ * - Use a stack to simulate directory traversal.
+ * - Split the input path by '/'.
+ * - Ignore empty strings and "." (current directory).
+ * - For "..", pop from the stack if not empty (go up one directory).
+ * - Otherwise, push valid directory names.
+ * - Finally, build the simplified path by joining the stack with '/'.
+ */
+
+Solution
+--
+class Solution {
+    public String simplifyPath(String path) {
+        Stack<String> stack = new Stack<>();
+        
+        // Split the path by '/' to extract directories
+        String[] paths = path.split("/");
+        
+        for (String str : paths) {
+            if (str.equals(".") || str.equals("")) {
+                // Skip current directory or empty string due to consecutive slashes
+                continue;
+            } else if (str.equals("..")) {
+                // Go up to the parent directory if possible
+                if (!stack.isEmpty())
+                    stack.pop();
+            } else {
+                // Valid directory name
+                stack.push(str);
+            }
+        }
+
+        // Build the simplified canonical path
+        StringBuilder result = new StringBuilder();
+        for (String s : stack) {
+            result.append("/");
+            result.append(s);
+        }
+
+        // Return "/" if stack is empty
+        return result.length() > 0 ? result.toString() : "/";
+    }
+}
+--
