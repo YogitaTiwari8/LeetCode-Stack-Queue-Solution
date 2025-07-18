@@ -1,0 +1,67 @@
+/*
+ * Leetcode: 735
+ * Problem: Asteroid Collision
+ * Leetcode: https://leetcode.com/problems/asteroid-collision/
+ * 
+ * Problem Description:
+ * - You are given an array of integers representing asteroids in a row.
+ * - Each asteroid moves either left (negative) or right (positive).
+ * - When two asteroids collide, the smaller one (in absolute value) explodes.
+ * - If both are the same size, both explode.
+ * - Moving in the same direction or away from each other causes no collision.
+ * 
+ * Goal: Return the state of the asteroids after all collisions.
+ * 
+ * Approach (Stack-based):
+ * ----------------------------------------------------
+ * 1. Use a stack to track the current list of surviving asteroids.
+ * 2. Iterate through the asteroids:
+ *     - If the current asteroid is moving right (`>0`), push it into the stack.
+ *     - If moving left (`<0`), there might be a collision:
+ *         - Compare with the top of the stack while the top is a right-moving asteroid (`>0`).
+ *         - If the current left asteroid is bigger, pop the right one and continue.
+ *         - If both are equal, pop the right one and break.
+ *         - If the current one is smaller, it gets destroyed, so stop pushing it.
+ * 3. After the loop, the stack contains the surviving asteroids in order.
+ */
+
+Solution
+--
+class Solution {
+    public int[] asteroidCollision(int[] asteroids) {
+        Stack<Integer> stack = new Stack<>();
+
+        for (int i = 0; i < asteroids.length; i++) {
+            boolean destroyed = false;
+
+            // Collision only happens if current is left-moving and stack top is right-moving
+            while (!stack.isEmpty() && asteroids[i] < 0 && stack.peek() > 0) {
+                int top = stack.peek();
+                int current = Math.abs(asteroids[i]);
+
+                if (current > top) {
+                    stack.pop(); // top explodes, check next
+                    continue;
+                } else if (current == top) {
+                    stack.pop(); // both explode
+                }
+                destroyed = true; // current asteroid is destroyed in either case
+                break;
+            }
+
+            // If not destroyed by any collision, push into stack
+            if (!destroyed) {
+                stack.push(asteroids[i]);
+            }
+        }
+
+        // Stack to array conversion (reverse order)
+        int[] result = new int[stack.size()];
+        for (int j = result.length - 1; j >= 0; j--) {
+            result[j] = stack.pop();
+        }
+
+        return result;
+    }
+}
+--
